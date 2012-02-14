@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ *   This file is the main drupal interface for the islandora_training_demo.
+ *
+ * @author William Panting
+ */
+
+/**
+* The menu entries for this module.
+* @return $menu_entries
+*   An arrray of the items to be added to the drupal menu
+*/
+function islandora_training_demo_menu() {
+  $menu_entries = array();
+
+  //first test page for the module
+  $menu_entries['islandora_training_demo_hello_islandora'] = array(
+    'title' => 'Hello Islandora!',
+    'description' => 'This is the main access point to islandora_workflow',
+    'page callback' => 'islandora_training_demo_hello_islandora',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $menu_entries;
+}
+
+/**
+ * This function is the menu callback for the hello islandora page
+ */
+function islandora_training_demo_hello_islandora() {
+  //init
+  module_load_include('inc', 'islandora_training_demo', 'islandora_training_demo');
+  $page = 'This came from the module layer, the realm of doing and deciding.';
+
+
+  $query_file_name = drupal_get_path('module', 'islandora_training_demo') . '/all_objects_SPARQL_query.txt';
+  $query_file_handle = fopen($query_file_name, "r");
+  $query = fread($query_file_handle, filesize($query_file_name));
+  drupal_set_message($query);
+  fclose($query_file_handle);
+
+  $query_results = do_SPARQL_query($query, TRUE);
+  drupal_set_message($query_results);
+  /*
+   * A practice we are adopting is to have generalized querys in text files and using find/replace
+   * to search on specific items
+   */
+  //$query = preg_replace('/\$collection_object/', '<info:fedora/' . $collection_id . '>', $query);
+
+
+  return $page . "How many objects in this repo: $query_results";
+}

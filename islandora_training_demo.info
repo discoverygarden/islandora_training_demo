@@ -1,0 +1,6 @@
+name = islandora_training_demo
+description = A module meant to help bring new Islandora devs up to speed.
+dependencies[] = fedora_repository
+package = Islandora
+version = 6.x-$Format:%h$-dev
+core = 6.x
